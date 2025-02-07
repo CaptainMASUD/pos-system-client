@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { FaChevronDown, FaChevronRight, FaSignOutAlt, FaMinus } from "react-icons/fa"
 import { motion, AnimatePresence } from "framer-motion" // Importing Framer Motion components
+import { useNavigate } from "react-router-dom"
 
 export default function Sidebar({
   setActiveSection,
@@ -29,10 +30,10 @@ export default function Sidebar({
     setActiveSubcategory(subcategory)
   }
 
-  const handleLogout = () => {
-    // Implement logout functionality here
-    console.log("Logging out...")
-  }
+   const navigate = useNavigate()
+    const hanglelogout =()=>{
+      navigate("/")
+    }
 
   return (
     <aside className="w-64 bg-green-700 text-white flex flex-col h-screen sticky top-0 overflow-y-auto">
@@ -88,7 +89,7 @@ export default function Sidebar({
           ))}
         </nav>
       </div>
-      <button className="mt-auto p-5 flex items-center justify-center hover:bg-green-800" onClick={handleLogout}>
+      <button className="mt-auto p-5 flex items-center justify-center hover:bg-green-800" onClick={hanglelogout}>
         <FaSignOutAlt size={18} className="mr-2" />
         Logout
       </button>

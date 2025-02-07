@@ -1,4 +1,5 @@
 import { FaDollarSign, FaSearch, FaCalculator, FaTrash, FaChartBar, FaKey, FaSignOutAlt } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 
 const Sidebar = ({ activeTab, setActiveTab, cashierName }) => {
   const menuItems = [
@@ -9,6 +10,10 @@ const Sidebar = ({ activeTab, setActiveTab, cashierName }) => {
     { key: "Daily Sales", icon: FaChartBar },
     { key: "Change Password", icon: FaKey },
   ]
+  const navigate = useNavigate()
+  const hanglelogout =()=>{
+    navigate("/")
+  }
 
   return (
     <div className="w-64 bg-indigo-800 text-white shadow-lg flex flex-col">
@@ -34,7 +39,7 @@ const Sidebar = ({ activeTab, setActiveTab, cashierName }) => {
         </ul>
       </nav>
       <div className="p-4 border-t border-indigo-700">
-        <button className="flex items-center text-indigo-100 hover:text-white transition-colors">
+        <button onClick={hanglelogout} className="flex items-center text-indigo-100 hover:text-white transition-colors">
           <FaSignOutAlt className="w-5 h-5 mr-3" />
           <span>Logout</span>
         </button>
