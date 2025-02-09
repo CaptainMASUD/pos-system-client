@@ -1,43 +1,66 @@
-import { useState } from "react"
-import { Table, Button, Modal, TextInput } from "flowbite-react"
-import { FaPlus, FaEdit, FaTrash } from "react-icons/fa"
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Table, Button, Modal, TextInput } from "flowbite-react";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function BrandContent() {
-  const [brands, setBrands] = useState([])
-  const [showModal, setShowModal] = useState(false)
-  const [newBrand, setNewBrand] = useState("")
-  const [editingId, setEditingId] = useState(null) // Added state for editing
+  const [brands, setBrands] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [newBrand, setNewBrand] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
-  const handleAddBrand = () => {
-    if (newBrand.trim()) {
-      setBrands([...brands, { id: Date.now(), name: newBrand }])
-      setShowModal(false)
-      setNewBrand("")
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+
+  const fetchBrands = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/brands/");
+      setBrands(response.data);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
     }
-  }
+  };
+
+  const handleSave = async () => {
+    if (!newBrand.trim()) return;
+
+    try {
+      if (editingId) {
+        await axios.put(`http://localhost:4000/api/brands/${editingId}`, {
+          brandName: newBrand,
+        });
+      } else {
+        await axios.post("http://localhost:4000/api/brands/", {
+          brandName: newBrand,
+        });
+      }
+      fetchBrands();
+    } catch (error) {
+      console.error("Error saving brand:", error);
+    }
+
+    setShowModal(false);
+    setNewBrand("");
+    setEditingId(null);
+  };
 
   const handleEdit = (brand) => {
-    setNewBrand(brand.name)
-    setEditingId(brand.id)
-    setShowModal(true)
-  }
+    setNewBrand(brand.brandName);
+    setEditingId(brand._id);
+    setShowModal(true);
+  };
 
-  const handleDelete = (brandId) => {
+  const handleDelete = async (brandId) => {
     if (window.confirm("Are you sure you want to delete this brand?")) {
-      setBrands(brands.filter((b) => b.id !== brandId))
+      try {
+        await axios.delete(`http://localhost:4000/api/brands/${brandId}`);
+        fetchBrands();
+      } catch (error) {
+        console.error("Error deleting brand:", error);
+      }
     }
-  }
-
-  const handleSave = () => {
-    if (editingId) {
-      setBrands(brands.map((b) => (b.id === editingId ? { ...b, name: newBrand } : b)))
-      setEditingId(null)
-    } else {
-      setBrands([...brands, { id: Date.now(), name: newBrand }])
-    }
-    setShowModal(false)
-    setNewBrand("")
-  }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -50,15 +73,15 @@ export default function BrandContent() {
         </Table.Head>
         <Table.Body className="divide-y">
           {brands.map((brand, index) => (
-            <Table.Row key={brand.id}>
+            <Table.Row key={brand._id}>
               <Table.Cell>{index + 1}</Table.Cell>
-              <Table.Cell>{brand.name}</Table.Cell>
+              <Table.Cell>{brand.brandName}</Table.Cell>
               <Table.Cell>
                 <Button.Group>
                   <Button color="info" size="sm" onClick={() => handleEdit(brand)}>
                     <FaEdit />
                   </Button>
-                  <Button color="failure" size="sm" onClick={() => handleDelete(brand.id)}>
+                  <Button color="failure" size="sm" onClick={() => handleDelete(brand._id)}>
                     <FaTrash />
                   </Button>
                 </Button.Group>
@@ -77,23 +100,27 @@ export default function BrandContent() {
       <Modal
         show={showModal}
         onClose={() => {
-          setShowModal(false)
-          setNewBrand("")
-          setEditingId(null)
+          setShowModal(false);
+          setNewBrand("");
+          setEditingId(null);
         }}
       >
         <Modal.Header>Add/Edit Brand</Modal.Header>
         <Modal.Body>
-          <TextInput value={newBrand} onChange={(e) => setNewBrand(e.target.value)} placeholder="Brand Name" />
+          <TextInput
+            value={newBrand}
+            onChange={(e) => setNewBrand(e.target.value)}
+            placeholder="Brand Name"
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleSave}>Save</Button>
           <Button
             color="gray"
             onClick={() => {
-              setShowModal(false)
-              setNewBrand("")
-              setEditingId(null)
+              setShowModal(false);
+              setNewBrand("");
+              setEditingId(null);
             }}
           >
             Close
@@ -101,6 +128,5 @@ export default function BrandContent() {
         </Modal.Footer>
       </Modal>
     </div>
-  )
+  );
 }
-
