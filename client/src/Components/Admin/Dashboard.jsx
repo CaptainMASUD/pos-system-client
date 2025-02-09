@@ -1,9 +1,10 @@
 import { useState } from "react"
-import { FaTachometerAlt, FaBox, FaLayerGroup, FaBoxOpen, FaArrowAltCircleDown, FaDollarSign, FaChartLine, FaUserCog, FaStore } from "react-icons/fa";  // Import icons from react-icons
+import { FaTachometerAlt, FaBox, FaLayerGroup, FaBoxOpen, FaArrowAltCircleDown, FaDollarSign, FaChartLine, FaUserCog, FaStore, FaTruck } from "react-icons/fa";  // Import icons from react-icons
 import { MdDashboard } from "react-icons/md";
 import { LiaHistorySolid } from "react-icons/lia";
 import { PiNotebookFill } from "react-icons/pi";
 import { MdSell } from "react-icons/md";
+import { MdAssignmentReturn } from "react-icons/md";
 
 import Sidebar from "./Sidebar"
 import DashboardContent from "./DashboardContent"
@@ -28,6 +29,7 @@ import SupplierLedgerContent from "./SupplierLedgerContent"
 import SupplierDueReportContent from "./SupplierDueReportContent"
 import PurchaseReportContent from "./PurchaseReportContent"
 import LowStockReportContent from "./LowStockReportContent"
+import SupplierContent from "./SupplierContent"
 
 const sections = {
   Dashboard: { 
@@ -53,8 +55,12 @@ const sections = {
     icon: <FaBoxOpen />, 
     component: <DamageContent /> 
   },
+  Suppliers: { 
+    icon: <FaTruck />, 
+    component: <SupplierContent /> 
+  },
   "Sales Returns": { 
-    icon: <LiaHistorySolid />, 
+    icon: <MdAssignmentReturn />, 
     component: <PurchaseReturnGoodsContent /> 
   },
   Expense: {
