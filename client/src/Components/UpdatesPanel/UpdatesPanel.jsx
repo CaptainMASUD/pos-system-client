@@ -1,48 +1,61 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaLightbulb, FaBolt, FaRocket, FaStar, FaTimes } from "react-icons/fa";
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import {
+  FaLightbulb,
+  FaBolt,
+  FaRocket,
+  FaStar,
+  FaTimes,
+  FaClipboardCheck,
+  FaTools,
+  FaExclamationTriangle,
+} from "react-icons/fa"
 
 const updates = [
   {
     id: 1,
-    title: "New Discount System",
-    description: "Implement a flexible discount system allowing both item-specific and global discounts.",
-    date: "",
-    type: "new",
+    title: "Product List Completed",
+    description: "The product list feature has been fully implemented and is now ready for use.",
+    type: "completed",
   },
   {
     id: 2,
-    title: "Enhanced Receipt Printing",
-    description: "Improved receipt design with shop details and a thank you message.",
-    date: "",
-    type: "improvement",
+    title: "Damaged Product Component",
+    description: "Currently working on a new component to handle damaged product reporting and management.",
+    type: "inProgress",
   },
   {
     id: 3,
-    title: "Bug Fix: Total Calculation",
-    description: "Fixed an issue where the total was incorrectly calculated in some scenarios.",
-    date: "",
-    type: "fix",
+    title: "Inventory Tracking Improvement",
+    description: "Enhanced the inventory tracking system for more accurate stock management.",
+    type: "improvement",
   },
   {
     id: 4,
-    title: "New Daily Sales Report",
-    description: "Added a comprehensive daily sales report with detailed analytics.",
-    date: "",
+    title: "Bug Fix: Price Calculation",
+    description: "Fixed an issue where prices were incorrectly calculated for bulk purchases.",
+    type: "fix",
+  },
+  {
+    id: 5,
+    title: "New Feature: Quick Add Products",
+    description: "Implemented a quick add feature for faster product entry during busy hours.",
     type: "new",
   },
-];
+]
 
 const iconMap = {
   new: FaRocket,
   improvement: FaLightbulb,
   fix: FaBolt,
-};
+  completed: FaClipboardCheck,
+  inProgress: FaTools,
+}
 
 const UpdatesPanel = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -62,7 +75,7 @@ const UpdatesPanel = () => {
             </div>
             <div className="space-y-4 max-h-96 overflow-y-auto">
               {updates.map((update) => {
-                const Icon = iconMap[update.type];
+                const Icon = iconMap[update.type] || FaExclamationTriangle
                 return (
                   <motion.div
                     key={update.id}
@@ -73,14 +86,25 @@ const UpdatesPanel = () => {
                   >
                     <div className="flex items-center mb-2">
                       <Icon
-                        className={`mr-2 ${update.type === "new" ? "text-green-500" : update.type === "improvement" ? "text-blue-500" : "text-yellow-500"}`}
+                        className={`mr-2 ${
+                          update.type === "new"
+                            ? "text-green-500"
+                            : update.type === "improvement"
+                              ? "text-blue-500"
+                              : update.type === "fix"
+                                ? "text-yellow-500"
+                                : update.type === "completed"
+                                  ? "text-purple-500"
+                                  : update.type === "inProgress"
+                                    ? "text-orange-500"
+                                    : "text-gray-500"
+                        }`}
                       />
                       <h3 className="text-lg font-semibold">{update.title}</h3>
                     </div>
-                    <p className="text-gray-600 mb-2">{update.description}</p>
-                    <p className="text-sm text-gray-400">{update.date}</p>
+                    <p className="text-gray-600">{update.description}</p>
                   </motion.div>
-                );
+                )
               })}
             </div>
           </motion.div>
@@ -96,7 +120,7 @@ const UpdatesPanel = () => {
         <span>Updates</span>
       </motion.button>
     </div>
-  );
-};
+  )
+}
 
-export default UpdatesPanel;
+export default UpdatesPanel
