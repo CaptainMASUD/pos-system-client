@@ -1,11 +1,7 @@
-import { useState } from "react"
-import { FaTachometerAlt, FaBox, FaLayerGroup, FaBoxOpen, FaArrowAltCircleDown, FaDollarSign, FaChartLine, FaUserCog, FaStore, FaTruck } from "react-icons/fa";  // Import icons from react-icons
-import { MdDashboard } from "react-icons/md";
-import { LiaHistorySolid } from "react-icons/lia";
-import { PiNotebookFill } from "react-icons/pi";
-import { MdSell } from "react-icons/md";
-import { MdAssignmentReturn } from "react-icons/md";
+"use client"
 
+import { useState, useEffect } from "react"
+import { FaBars } from "react-icons/fa"
 import Sidebar from "./Sidebar"
 import DashboardContent from "./DashboardContent"
 import ProductListContent from "./ProductListContent"
@@ -13,8 +9,6 @@ import CategoryContent from "./CategoryContent"
 import BrandContent from "./BrandContent"
 import StockEntryContent from "./StockEntryContent"
 import StockAdjustmentsContent from "./StockAdjustmentsContent"
-import PurchasedSuppliesContent from "./PurchasedSuppliesContent"
-import PaidSuppliesContent from "./PaidSuppliesContent"
 import SalesRecordContent from "./SalesRecordContent"
 import PosRecordsContent from "./PosRecordsContent"
 import UserContent from "./UserContent"
@@ -30,11 +24,19 @@ import SupplierDueReportContent from "./SupplierDueReportContent"
 import PurchaseReportContent from "./PurchaseReportContent"
 import LowStockReportContent from "./LowStockReportContent"
 import SupplierContent from "./SupplierContent"
+import AddExpesnses from "./AddExpesnses"
+import AllCategories from "./AllCategories"
+import AllExpensses from "./AllExpensses"
+
+import { MdDashboard } from "react-icons/md"
+import { FaBox, FaLayerGroup, FaBoxOpen, FaChartLine, FaUserCog, FaTruck } from "react-icons/fa"
+import { PiNotebookFill } from "react-icons/pi"
+import { MdSell, MdAssignmentReturn } from "react-icons/md"
 
 const sections = {
-  Dashboard: { 
-    icon: <MdDashboard />, 
-    component: <DashboardContent /> 
+  Dashboard: {
+    icon: <MdDashboard />,
+    component: <DashboardContent />,
   },
   Product: {
     icon: <FaBox />,
@@ -51,23 +53,24 @@ const sections = {
       "Stock Adjustments": <StockAdjustmentsContent />,
     },
   },
-  Damage: { 
-    icon: <FaBoxOpen />, 
-    component: <DamageContent /> 
+  Damage: {
+    icon: <FaBoxOpen />,
+    component: <DamageContent />,
   },
-  Suppliers: { 
-    icon: <FaTruck />, 
-    component: <SupplierContent /> 
+  Suppliers: {
+    icon: <FaTruck />,
+    component: <SupplierContent />,
   },
-  "Sales Returns": { 
-    icon: <MdAssignmentReturn />, 
-    component: <PurchaseReturnGoodsContent /> 
+  "Sales Returns": {
+    icon: <MdAssignmentReturn />,
+    component: <PurchaseReturnGoodsContent />,
   },
   Expense: {
     icon: <PiNotebookFill />,
     subcategories: {
-      "Purchased Supplies": <PurchasedSuppliesContent />,
-      "Paid Supplies": <PaidSuppliesContent />,
+      "Add Expesnses": <AddExpesnses />,
+      "All Expensses": <AllExpensses />,
+      "All Categories": <AllCategories />,
     },
   },
   Sales: {
@@ -102,6 +105,25 @@ const sections = {
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState("Dashboard")
   const [activeSubcategory, setActiveSubcategory] = useState("")
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen)
+  }
 
   const renderContent = () => {
     const section = sections[activeSection]
@@ -119,15 +141,24 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen relative">
+      {isMobile && (
+        <button className="fixed top-4 left-4 z-50 p-2 bg-green-700 text-white rounded-md" onClick={toggleSidebar}>
+          <FaBars />
+        </button>
+      )}
       <Sidebar
         setActiveSection={setActiveSection}
         setActiveSubcategory={setActiveSubcategory}
         sections={sections}
         activeSection={activeSection}
         activeSubcategory={activeSubcategory}
+        isMobile={isMobile}
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
       />
-      <main className="flex-1 p-5 bg-gray-100">{renderContent()}</main>
+      <main className={`flex-1 p-5 bg-gray-100 ${isMobile ? "w-full" : ""}`}>{renderContent()}</main>
     </div>
   )
 }
+
