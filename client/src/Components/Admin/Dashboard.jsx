@@ -27,9 +27,12 @@ import SupplierContent from "./SupplierContent"
 import AddExpesnses from "./AddExpesnses"
 import AllCategories from "./AllCategories"
 import AllExpensses from "./AllExpensses"
+import AddPaymentContent from "./AddPaymentContent"
+import AllPaymentsContent from "./AllPaymentsContent"
+// import PayDueContent from "./PayDueContent"
 
 import { MdDashboard } from "react-icons/md"
-import { FaBox, FaLayerGroup, FaBoxOpen, FaChartLine, FaUserCog, FaTruck } from "react-icons/fa"
+import { FaBox, FaLayerGroup, FaBoxOpen, FaChartLine, FaUserCog, FaTruck, FaMoneyBillWave } from "react-icons/fa"
 import { PiNotebookFill } from "react-icons/pi"
 import { MdSell, MdAssignmentReturn } from "react-icons/md"
 
@@ -78,6 +81,14 @@ const sections = {
     subcategories: {
       "Sales Record": <SalesRecordContent />,
       "POS Records": <PosRecordsContent />,
+    },
+  },
+  Payments: {
+    icon: <FaMoneyBillWave />,
+    subcategories: {
+      "Add Payment": <AddPaymentContent />,
+      "All Payments": <AllPaymentsContent />,
+      // "Pay Due": <PayDueContent />,
     },
   },
   Reports: {

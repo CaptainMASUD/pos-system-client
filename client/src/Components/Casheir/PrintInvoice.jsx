@@ -1,8 +1,24 @@
+"use client"
+
 import { useRef } from "react"
 import ReactToPrint from "react-to-print"
 
 const PrintInvoice = ({ invoice, onClose }) => {
   const componentRef = useRef()
+
+  if (!invoice) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg w-96">
+          <h2 className="text-2xl font-bold mb-4">Error</h2>
+          <p>Invoice data is not available.</p>
+          <button onClick={onClose} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+            Close
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -26,13 +42,13 @@ const PrintInvoice = ({ invoice, onClose }) => {
                 <tr key={index}>
                   <td>{item.description}</td>
                   <td>{item.qty}</td>
-                  <td>${item.price.toFixed(2)}</td>
-                  <td>${item.total.toFixed(2)}</td>
+                  <td>৳{item.sellPrice.toFixed(2)}</td>
+                  <td>৳{item.total.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p className="mt-4 font-bold">Total: ${invoice.total.toFixed(2)}</p>
+          <p className="mt-4 font-bold">Total: ৳{invoice.total.toFixed(2)}</p>
         </div>
         <div className="mt-4 flex justify-end space-x-2">
           <ReactToPrint

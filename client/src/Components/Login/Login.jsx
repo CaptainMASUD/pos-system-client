@@ -2,28 +2,45 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUser, FaLock, FaBook } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login attempted with:", { username, password });
+    setError(null); // Reset error message
 
-    if (username === "admin" && password === "admin123") {
-      navigate("/admin");
-    } else if (username === "cashier" && password === "cashier123") {
-      navigate("/cashier");
-    } else {
-      alert("Invalid username or password");
+    try {
+      const response = await axios.post("http://localhost:4000/api/users/login", {
+        username,
+        password,
+      });
+
+      if (response.status === 200 && response.data?.user?.role) {
+        const { role } = response.data.user; // Extract role correctly
+
+        if (role === "admin") {
+          navigate("/admin");
+        } else if (role === "cashier") {
+          navigate("/cashier");
+        } else {
+          setError("Invalid role received from server.");
+        }
+      } else {
+        setError("Unexpected response from server.");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-green-200 to-green-300 relative overflow-hidden">
-      {/* Animated book background with smoother motion */}
+      {/* Animated book background */}
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
@@ -60,6 +77,9 @@ const LoginForm = () => {
           <h1 className="text-3xl font-bold text-green-800">Book Palace 2</h1>
         </div>
         <h2 className="text-2xl font-bold mb-6 text-center text-green-900">Login</h2>
+        
+        {error && <p className="text-red-600 text-center">{error}</p>}
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
             <FaUser className="absolute top-3 left-3 text-green-600" />

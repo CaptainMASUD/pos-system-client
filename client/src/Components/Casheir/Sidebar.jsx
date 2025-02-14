@@ -1,17 +1,16 @@
-import { FaDollarSign, FaSearch, FaCalculator, FaTrash, FaChartBar, FaKey, FaSignOutAlt } from "react-icons/fa"
+import { FaDollarSign, FaSearch, FaTrash, FaChartBar, FaKey, FaSignOutAlt } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
 
 const Sidebar = ({ activeTab, setActiveTab, cashierName }) => {
   const menuItems = [
     { key: "New Transaction", icon: FaDollarSign },
     { key: "Search Product", icon: FaSearch },
-    { key: "Settle Payment", icon: FaCalculator },
     { key: "Clear Cart", icon: FaTrash },
     { key: "Daily Sales", icon: FaChartBar },
     { key: "Change Password", icon: FaKey },
   ]
   const navigate = useNavigate()
-  const hanglelogout =()=>{
+  const hanglelogout = () => {
     navigate("/")
   }
 
