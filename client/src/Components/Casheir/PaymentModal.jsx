@@ -2,19 +2,21 @@
 
 import { useState } from "react"
 import { FaMoneyBillWave, FaCreditCard, FaMobileAlt } from "react-icons/fa"
+import { usePOSContext } from "./context/POSContext"
 
-const PaymentModal = ({ total, onConfirm }) => {
+const PaymentModal = () => {
+  const { calculateTotal, settlePayment, setShowPaymentModal } = usePOSContext()
   const [amount, setAmount] = useState("")
   const [paymentType, setPaymentType] = useState("cash")
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const paymentAmount = Number.parseFloat(amount)
-    if (isNaN(paymentAmount) || paymentAmount < total) {
+    if (isNaN(paymentAmount) || paymentAmount < calculateTotal()) {
       alert("Please enter a valid payment amount")
       return
     }
-    onConfirm(paymentAmount, paymentType)
+    settlePayment(paymentAmount, paymentType)
   }
 
   return (
@@ -24,7 +26,7 @@ const PaymentModal = ({ total, onConfirm }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Total Amount</label>
-            <div className="text-4xl font-bold text-green-600">৳{total.toFixed(2)}</div>
+            <div className="text-4xl font-bold text-green-600">৳{calculateTotal().toFixed(2)}</div>
           </div>
           <div>
             <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">

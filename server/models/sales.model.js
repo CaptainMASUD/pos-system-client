@@ -1,22 +1,23 @@
 import mongoose from 'mongoose';
+import AutoIncrement from 'mongoose-sequence';
 
-const salesSchema = new mongoose.Schema(
-  {
-    invoiceNo: { type: String, required: true, unique: true },
-    items: [
-      {
-        barcode: { type: String, required: true },
-        price: { type: Number, required: true },
+const saleSchema = new mongoose.Schema({
+    transactionNo: { type: Number, unique: true },
+    customerName: { type: String, required: true },
+    customerNumber: { type: String, required: true },
+    totalAmount: { type: Number, required: true },
+    discount: { type: Number, default: 0 },
+    finalAmount: { type: Number, required: true },
+    products: [{
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
         quantity: { type: Number, required: true },
-        discount: { type: Number, default: 0 },
-      },
-    ],
-    paymentType: { type: String, enum: ['cash', 'card', 'mobile'], required: true },
-    total: { type: Number, required: true },
-  },
-  { timestamps: true }
-);
+        price: { type: Number, required: true }
+    }],
+    createdAt: { type: Date, default: Date.now }
+});
 
-const Sales = mongoose.model('Sales', salesSchema);
+// ✅ Fix: Properly apply the Auto-Increment plugin
+saleSchema.plugin(AutoIncrement(mongoose), { inc_field: 'transactionNo' });
 
-export default Sales;
+const Sale = mongoose.model('Sale', saleSchema);
+export default Sale;

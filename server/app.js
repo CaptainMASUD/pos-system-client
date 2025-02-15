@@ -20,6 +20,9 @@ import salesRoutes from './routes/sales.routes.js';
 import returnItemRoutes from './routes/sales_returns.routes.js';
 import paySupplierRoutes from './routes/addpayments.routes.js';
 import usersRoutes from './routes/users.routes.js';
+import cartRoutes from './routes/cart.routes.js';
+import transactionRoutes from './routes/transaction.routes.js';
+
 
 app.use('/api/users', usersRoutes);
 app.use('/api/productlist', productlistRoutes);
@@ -35,7 +38,11 @@ app.use('/api/return-items', returnItemRoutes);
 app.use('/api/payments', paySupplierRoutes);
 
 
-app.use('/api/sales', salesRoutes);
+// For selling products
+app.use('/api/cart', cartRoutes);
+app.use('/api/transactions', transactionRoutes);
+
+app.use("/api/sales", salesRoutes)
 
 
 //handle error

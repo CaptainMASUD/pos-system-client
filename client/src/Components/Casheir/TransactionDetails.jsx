@@ -2,8 +2,11 @@
 
 import { useState, useEffect, useRef } from "react"
 import { FaGripLines } from "react-icons/fa"
+import { usePOSContext } from "./context/POSContext"
 
-const TransactionDetails = ({ transactionNo, time, handleBarcodeSubmit, calculateTotal, calculateTotalDiscount }) => {
+const TransactionDetails = () => {
+  const { transactionNo, time, handleBarcodeSubmit, calculateTotal, calculateTotalDiscount } = usePOSContext()
+
   const [barcode, setBarcode] = useState("")
   const [error, setError] = useState("")
   const detailsRef = useRef(null)
@@ -42,14 +45,27 @@ const TransactionDetails = ({ transactionNo, time, handleBarcodeSubmit, calculat
     setError("")
   }
 
-  const onBarcodeSubmit = (e) => {
+  const onBarcodeSubmit = async (e) => {
     e.preventDefault()
-    const success = handleBarcodeSubmit(barcode)
-    if (success) {
-      setBarcode("")
-      setError("")
-    } else {
-      setError("Product not found. Please check the barcode and try again.")
+    try {
+      const response = await fetch(`http://localhost:4000/api/productlist?barcode=${barcode}`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch product")
+      }
+      const products = await response.json()
+      if (products.length > 0) {
+        const success = handleBarcodeSubmit(barcode)
+        if (success) {
+          setBarcode("")
+          setError("")
+        } else {
+          setError("Failed to add product to cart. Please try again.")
+        }
+      } else {
+        setError("Product not found. Please check the barcode and try again.")
+      }
+    } catch (error) {
+      setError("An error occurred. Please try again.")
     }
   }
 

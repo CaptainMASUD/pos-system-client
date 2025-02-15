@@ -1,10 +1,16 @@
-const PrintReceipt = ({ receipt, onClose, onPrintComplete }) => {
+"use client"
+
+import { usePOSContext } from "./context/POSContext"
+
+const PrintReceipt = () => {
+  const { currentReceipt, setShowPrintReceipt } = usePOSContext()
+
   const handlePrint = () => {
     window.print()
-    onPrintComplete()
+    setShowPrintReceipt(false)
   }
 
-  if (!receipt) return null
+  if (!currentReceipt) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -15,30 +21,30 @@ const PrintReceipt = ({ receipt, onClose, onPrintComplete }) => {
         </div>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">Receipt</h2>
-          <button onClick={onClose} className="text-gray-600 hover:text-gray-800">
+          <button onClick={() => setShowPrintReceipt(false)} className="text-gray-600 hover:text-gray-800">
             Close
           </button>
         </div>
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-2 text-sm">
             <p>Transaction No:</p>
-            <p className="text-right">{receipt.transactionNo}</p>
+            <p className="text-right">{currentReceipt.transactionNo}</p>
             <p>Date:</p>
-            <p className="text-right">{receipt.date}</p>
+            <p className="text-right">{currentReceipt.date}</p>
             <p>Subtotal:</p>
-            <p className="text-right">৳{receipt.subtotal.toFixed(2)}</p>
+            <p className="text-right">৳{currentReceipt.subtotal.toFixed(2)}</p>
             <p>Total Discount:</p>
-            <p className="text-right">৳{receipt.totalDiscount.toFixed(2)}</p>
+            <p className="text-right">৳{currentReceipt.totalDiscount.toFixed(2)}</p>
             <p>VAT:</p>
-            <p className="text-right">৳{receipt.vat.toFixed(2)}</p>
+            <p className="text-right">৳{currentReceipt.vat.toFixed(2)}</p>
             <p className="font-semibold">Total:</p>
-            <p className="text-right font-semibold">৳{receipt.total.toFixed(2)}</p>
+            <p className="text-right font-semibold">৳{currentReceipt.total.toFixed(2)}</p>
             <p>Payment Amount:</p>
-            <p className="text-right">৳{receipt.paymentAmount.toFixed(2)}</p>
+            <p className="text-right">৳{currentReceipt.paymentAmount.toFixed(2)}</p>
             <p>Change:</p>
-            <p className="text-right">৳{receipt.change.toFixed(2)}</p>
+            <p className="text-right">৳{currentReceipt.change.toFixed(2)}</p>
             <p>Payment Type:</p>
-            <p className="text-right">{receipt.paymentType}</p>
+            <p className="text-right">{currentReceipt.paymentType}</p>
           </div>
           <table className="w-full text-sm">
             <thead className="border-t border-b">
@@ -50,7 +56,7 @@ const PrintReceipt = ({ receipt, onClose, onPrintComplete }) => {
               </tr>
             </thead>
             <tbody>
-              {receipt.items.map((item) => (
+              {currentReceipt.items.map((item) => (
                 <tr key={item.id}>
                   <td className="py-1">{item.description}</td>
                   <td className="text-right py-1">{item.qty}</td>

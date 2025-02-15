@@ -1,4 +1,10 @@
-const ClearCart = ({ clearCart, setActiveTab }) => {
+"use client"
+
+import { usePOSContext } from "./context/POSContext"
+
+const ClearCart = () => {
+  const { clearCart, setActiveTab } = usePOSContext()
+
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Clear Cart</h2>
